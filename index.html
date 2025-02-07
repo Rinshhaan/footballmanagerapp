@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Formation Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="glass text-center my-4 p-3 rounded shadow">
+            <h1 class="title">⚽ Football Formation Manager</h1>
+            <p class="subtitle">Create your dream team and set formations!</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="row">
+            <!-- Controls -->
+            <div class="col-md-3">
+                <div class="controls glass p-3 shadow">
+                    <h5>Settings</h5>
+                    <label for="formationName" class="form-label">Formation Name:</label>
+                    <input type="text" id="formationName" class="form-control" placeholder="Enter formation name">
+
+                    <label for="playerCount" class="form-label mt-3">Number of Players:</label>
+                    <input type="number" id="playerCount" class="form-control" min="1" max="11" value="11">
+
+                    <label for="teamLogo" class="form-label mt-3">Team Logo:</label>
+                    <input type="file" id="teamLogo" class="form-control" accept="image/*">
+
+                    <button id="generatePlayers" class="btn btn-primary mt-3 w-100">Generate Players</button>
+                </div>
+            </div>
+
+            <!-- Pitch -->
+            <div class="col-md-9">
+                <div class="pitch-container">
+                    <div class="pitch glass shadow">
+                        <div class="half-line"></div>
+                        <div id="players"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Affiliate Section -->
+        <div class="affiliate-section glass mt-4 p-3 rounded shadow">
+            <h4 class="text-center mb-4">🔥 Top Deals for Football Fans</h4>
+            <div class="row" id="affiliateProducts">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Player Edit Modal -->
+        <div class="modal fade" id="playerEditModal" tabindex="-1" aria-labelledby="playerEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content glass">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="playerEditModalLabel">Edit Player</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="playerEditForm">
+                            <div class="mb-3">
+                                <label for="playerName" class="form-label">Player Name:</label>
+                                <input type="text" id="playerName" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="playerImage" class="form-label">Player Image:</label>
+                                <input type="file" id="playerImage" class="form-control" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
