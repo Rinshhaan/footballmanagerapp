@@ -1,83 +1,932 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Formation Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>Team Formation Builder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --neon-glow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #1a472a, #2d5a3f);
+            color: white;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: grid;
+            margin: 10px;
+            height: 10vh;
+        }
+
+        .navbar h1 {
+            margin: auto;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: var(--glass-bg);
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .tab-button.active {
+            background: #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .control-section {
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: column;
+        }
+
+        .controls {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            width: 45%;
+            margin: 0 auto;
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .vs-text {
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: var(--neon-glow);
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+
+        .field-container {
+            width: 100%;
+            height: 55vw;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .field-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            border-radius: 10px;
+        }
+
+        .field-container {
+            max-width: 800px;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .player {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .player-jersey {
+            width: 100%;
+            height: 100%;
+            background: #0f62fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .sub-section {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .substitutes {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            width: 45%;
+        }
+
+        .substitutes-list {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .substitute-player {
+            min-width: 100px;
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .fire-emoji {
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        .products-carousel {
+            margin-top: 1rem;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .products-track {
+            display: flex;
+            animation: scroll linear infinite;
+        }
+
+        /* Product Card with Original Glassmorphism */
+        .product-card {
+            min-width: 200px;
+            margin-right: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            /* Kept your original variable */
+            border-radius: 5px;
+            backdrop-filter: blur(5px);
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-image {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: rgba(255, 0, 0, 0.8);
+            /* Red with transparency */
+            font-size: 14px;
+        }
+
+        .new-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f0;
+            /* Bright Green */
+        }
+
+        /* Buy Button */
+        .btn {
+            background: rgba(0, 123, 255, 0.7);
+            /* Semi-transparent blue */
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: rgba(0, 123, 255, 1);
+        }
+
+        /* Offer Badge Animation */
+        .offer-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            font-size: 12px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* Scrolling Animation */
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+
+            /* Controlled via JavaScript */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 10px;
+            position: relative;
+            max-width: 90%;
+            width: 400px;
+        }
+
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0ff;
+            }
+
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0ff;
+            }
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .control-section {
+                flex-direction: column;
+            }
+
+            .controls {
+                width: 100%;
+            }
+
+            .player {
+                width: 30px;
+                height: 30px;
+            }
+
+
+        }
+    </style>
 </head>
+
 <body>
+    <nav class="navbar">
+        <h1>Football Formation manager ⚽</h1>
+    </nav>
     <div class="container">
-        <!-- Header -->
-        <header class="glass text-center my-4 p-3 rounded shadow">
-            <h1 class="title">⚽ Football Formation Manager</h1>
-            <p class="subtitle">Create your dream team and set formations!</p>
-        </header>
-
-        <!-- Main Content -->
-        <div class="row">
-            <!-- Controls -->
-            <div class="col-md-3">
-                <div class="controls glass p-3 shadow">
-                    <h5>Settings</h5>
-                    <label for="formationName" class="form-label">Match Name:</label>
-                    <input type="text" id="formationName" class="form-control" placeholder="Enter formation name">
-
-                    <label for="playerCount" class="form-label mt-3">Number of Players:</label>
-                    <input type="number" id="playerCount" class="form-control" min="1" max="11" value="11">
-
-                    <button id="generatePlayers" class="btn btn-primary mt-3 w-100">Generate Players</button>
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('myTeam')">My Team</button>
+            <button class="tab-button" onclick="switchTab('opponentTeam')">Opponent Team</button>
+        </div>
+        <div id="myTeam" class="tab-content active">
+            <!-- My Team Controls -->
+            <div class="controls">
+                <h4>My Team</h4>
+                <hr>
+                <br>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="teamName" placeholder="Enter Team Name">
                 </div>
+                <div class="form-group">
+                    <input type="file" class="form-control" id="teamLogo" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="playerCount" min="1" max="11" value="11"
+                        placeholder="Number of Players">
+                </div>
+                <button class="btn" onclick="generatePlayers()">Generate Team</button>
             </div>
-
-            <!-- Pitch -->
-            <div class="col-md-9">
-                <div class="pitch-container">
-                    <div class="pitch glass shadow">
-                        <div class="half-line"></div>
-                        <div id="players"></div>
-                    </div>
+        </div>
+        <div id="opponentTeam" class="tab-content">
+            <div class="controls">
+                <h4>Opponent Team</h4>
+                <hr>
+                <br>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="opponentTeamName"
+                        placeholder="Enter Opponent Team Name">
                 </div>
+                <div class="form-group">
+                    <input type="file" class="form-control" id="opponentTeamLogo" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="opponentPlayerCount" min="1" max="11" value="11"
+                        placeholder="Number of Players">
+                </div>
+                <button class="btn" onclick="generateOpponentPlayers()">Generate Opponent Team</button>
             </div>
         </div>
 
-        <!-- Affiliate Section -->
-        <div class="affiliate-section glass mt-4 p-3 rounded shadow">
-            <h4 class="text-center mb-4">🔥 Top Deals for Football Fans</h4>
-            <div class="row" id="affiliateProducts">
-                <!-- Products will be dynamically loaded here -->
-            </div>
+
+
+
+
+
+        <div class="team-header" id="teamHeader" style="display: none;">
+            <img src="" alt="Team Logo" class="team-logo" id="logoDisplay">
+            <span id="teamNameDisplay"></span>
+            <span class="vs-text">VS</span>
+            <img src="" alt="Opponent Team Logo" class="team-logo" id="opponentLogoDisplay">
+            <span id="opponentTeamNameDisplay"></span>
         </div>
 
-        <!-- Player Edit Modal -->
-        <div class="modal fade" id="playerEditModal" tabindex="-1" aria-labelledby="playerEditModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content glass">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="playerEditModalLabel">Edit Player</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="playerEditForm">
-                            <div class="mb-3">
-                                <label for="playerName" class="form-label">Player Name:</label>
-                                <input type="text" id="playerName" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="playerImage" class="form-label">Player Image:</label>
-                                <input type="file" id="playerImage" class="form-control" accept="image/*">
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Save</button>
-                        </form>
-                    </div>
-                </div>
+        <div class="field-container">
+            <img src="assets/images/football_pitch.jpg" alt="">
+            <div id="players"></div>
+            <div id="opponentPlayers"></div>
+        </div>
+        <div class="scrnsht-btn" style="display: grid; margin-top: 10px;">
+            <button class="btn" onclick="takeScreenshot()" style="margin: auto;">Screenshot📸</button>
+        </div>
+
+
+        <div class="sub-section">
+            <div class="substitutes">
+                <h3>Substitutes</h3>
+                <button class="btn" onclick="addSubstitute()">Add Player</button>
+                <div class="substitutes-list" id="substitutesList"></div>
+            </div>
+            <div class="substitutes">
+                <h3>Opponent Substitutes</h3>
+                <button class="btn" onclick="addOpponentSubstitute() ">Add Player</button>
+                <div class="substitutes-list" id="opponentSubstitutesList"></div>
+            </div>
+        </div>
+        <br>
+        <div class="affliate-header" style="text-align: center;">
+            <h4><span class="fire-emoji">🔥</span> Deals!</h4>
+        </div><br>
+        <div class="products-carousel">
+            <div class="products-track" id="productsTrack">
+
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="script.js"></script>
+    <div class="modal" id="adModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2 style="animation: glow 1.5s ease-in-out infinite alternate;">Special Offer!</h2>
+            <a href="https://www.amazon.in/AVANT-FreeKick-Football-Traction-Sockliner/dp/B0CPG3H86G"><img
+                    src="data:image/jpeg;base64,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"
+                    alt=""></a>
+            <p>Get 20% off on all soccer equipment!</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="playerModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closePlayerModal()">&times;</button>
+            <h2>Edit Player</h2>
+            <div class="form-group">
+                <label for="playerName">Player Name</label>
+                <input type="text" class="form-control" id="playerName" placeholder="Enter Player Name">
+            </div>
+            <div class="form-group">
+                <label for="playerImage">Player Image</label>
+                <input type="file" class="form-control" id="playerImage" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="playerFormation">Formation Position</label>
+                <input type="text" class="form-control" id="playerFormation" placeholder="Enter Formation Position">
+            </div>
+            <button class="btn" onclick="updatePlayer()">Save Changes</button>
+        </div>
+    </div>
+    </div>
+
+    <!-- sub Modal -->
+    <div class="modal" id="substituteModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeSubstituteModal()">&times;</button>
+            <h2>Edit Substitute Player</h2>
+            <div class="form-group">
+                <label for="substituteName">Player Name</label>
+                <input type="text" class="form-control" id="substituteName" placeholder="Enter Player Name">
+            </div>
+            <div class="form-group">
+                <label for="substituteImage">Player Image</label>
+                <input type="file" class="form-control" id="substituteImage" accept="image/*">
+            </div>
+            <button class="btn" onclick="updateSubstitute()">Save Changes</button>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+
+        let selectedPlayer = null;
+
+        function generatePlayers() {
+            const count = document.getElementById('playerCount').value;
+            const teamName = document.getElementById('teamName').value;
+            const logoFile = document.getElementById('teamLogo').files[0];
+
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('logoDisplay').src = e.target.result;
+                }
+                reader.readAsDataURL(logoFile);
+            }
+
+            document.getElementById('teamNameDisplay').textContent = teamName;
+            document.getElementById('teamHeader').style.display = 'flex';
+
+            const playersContainer = document.getElementById('players');
+            playersContainer.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const player = document.createElement('div');
+                player.className = 'player';
+                player.id = `player-${i + 1}`;
+                player.style.left = `${Math.random() * 80 + 10}%`;
+                player.style.top = `${Math.random() * 80 + 10}%`;
+
+                const jersey = document.createElement('div');
+                jersey.className = 'player-jersey';
+                jersey.textContent = i + 1;
+
+                player.appendChild(jersey);
+                playersContainer.appendChild(player);
+
+                makeDraggable(player);
+                addDoubleClickEvent(player); // Add double-click event for customization
+            }
+        }
+
+        function generateOpponentPlayers() {
+            const count = document.getElementById('opponentPlayerCount').value;
+            const teamName = document.getElementById('opponentTeamName').value;
+            const logoFile = document.getElementById('opponentTeamLogo').files[0];
+
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('opponentLogoDisplay').src = e.target.result;
+                }
+                reader.readAsDataURL(logoFile);
+            }
+
+            document.getElementById('opponentTeamNameDisplay').textContent = teamName;
+            document.getElementById('teamHeader').style.display = 'flex';
+
+            const playersContainer = document.getElementById('opponentPlayers');
+            playersContainer.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const player = document.createElement('div');
+                player.className = 'player';
+                player.id = `opponent-player-${i + 1}`;
+                player.style.left = `${Math.random() * 80 + 10}%`;
+                player.style.top = `${Math.random() * 80 + 10}%`;
+
+                const jersey = document.createElement('div');
+                jersey.className = 'player-jersey';
+                jersey.textContent = i + 1;
+
+                player.appendChild(jersey);
+                playersContainer.appendChild(player);
+
+                makeDraggable(player);
+                addDoubleClickEvent(player);
+            }
+        }
+
+        function addDoubleClickEvent(player) {
+            player.addEventListener('dblclick', () => {
+                selectedPlayer = player;
+                document.getElementById('playerModal').style.display = 'flex';
+            });
+        }
+
+        function updatePlayer() {
+            const playerName = document.getElementById('playerName').value;
+            const playerImage = document.getElementById('playerImage').files[0];
+            const playerFormation = document.getElementById('playerFormation').value;
+
+            if (playerName) {
+                selectedPlayer.querySelector('.player-jersey').textContent = playerName;
+            }
+
+            if (playerImage) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedPlayer.querySelector('.player-jersey').style.backgroundImage = `url(${e.target.result})`;
+                    selectedPlayer.querySelector('.player-jersey').style.backgroundSize = 'cover';
+                }
+                reader.readAsDataURL(playerImage);
+            }
+
+            if (playerFormation) {
+                selectedPlayer.dataset.formation = playerFormation;
+            }
+
+            closePlayerModal();
+        }
+
+        function closePlayerModal() {
+            document.getElementById('playerModal').style.display = 'none';
+        }
+
+
+
+
+        function updateSubstitute() {
+            const substituteName = document.getElementById('substituteName').value;
+            const substituteImage = document.getElementById('substituteImage').files[0];
+
+            // Update the substitute player's name
+            if (substituteName) {
+                selectedSubstitute.querySelector('input').value = substituteName;
+            }
+
+            // Update the substitute player's image
+            if (substituteImage) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedSubstitute.querySelector('.player-jersey').style.backgroundImage = `url(${e.target.result})`;
+                    selectedSubstitute.querySelector('.player-jersey').style.backgroundSize = 'cover';
+                }
+                reader.readAsDataURL(substituteImage);
+            }
+
+            closeSubstituteModal();
+        }
+
+        function closeSubstituteModal() {
+            document.getElementById('substituteModal').style.display = 'none';
+        }
+
+        function makeDraggable(element) {
+            let isDragging = false;
+            let currentX, currentY, initialX, initialY;
+            let xOffset = 0, yOffset = 0;
+
+            element.addEventListener('mousedown', dragStart);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', dragEnd);
+            element.addEventListener('touchstart', dragStart);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', dragEnd);
+
+            function dragStart(e) {
+                if (e.type === "touchstart") {
+                    initialX = e.touches[0].clientX - xOffset;
+                    initialY = e.touches[0].clientY - yOffset;
+                } else {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+                }
+                isDragging = true;
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    if (e.type === "touchmove") {
+                        currentX = e.touches[0].clientX - initialX;
+                        currentY = e.touches[0].clientY - initialY;
+                    } else {
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
+                    }
+                    xOffset = currentX;
+                    yOffset = currentY;
+                    element.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                }
+            }
+
+            function dragEnd() {
+                isDragging = false;
+            }
+        }
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            // Update tab button states
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        }
+
+        // Initialize with My Team tab active
+        switchTab('myTeam');
+
+        let selectedSubstitute = null;
+
+        function addSubstitute() {
+            const list = document.getElementById('substitutesList');
+            const sub = document.createElement('div');
+            sub.className = 'substitute-player';
+            sub.innerHTML = `
+        <div class="player-jersey">S</div>
+        <input type="text" placeholder="Name" class="form-control">
+    `;
+            list.appendChild(sub);
+
+            // Add double-click event to the substitute player's circle div
+            const circleDiv = sub.querySelector('.player-jersey');
+            circleDiv.addEventListener('dblclick', () => {
+                console.log('Double-clicked substitute player');
+                selectedSubstitute = sub;
+                document.getElementById('substituteModal').style.display = 'flex';
+            });
+        }
+
+        function updateSubstitute() {
+            const substituteName = document.getElementById('substituteName').value;
+            const substituteImage = document.getElementById('substituteImage').files[0];
+
+            // Update the substitute player's name
+            if (substituteName) {
+                selectedSubstitute.querySelector('input').value = substituteName;
+            }
+
+            // Update the substitute player's image
+            if (substituteImage) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedSubstitute.querySelector('.player-jersey').style.backgroundImage = `url(${e.target.result})`;
+                    selectedSubstitute.querySelector('.player-jersey').style.backgroundSize = 'cover';
+                }
+                reader.readAsDataURL(substituteImage);
+            }
+
+            closeSubstituteModal();
+        }
+
+        function closeSubstituteModal() {
+            document.getElementById('substituteModal').style.display = 'none';
+        }
+        function addOpponentSubstitute() {
+            const list = document.getElementById('opponentSubstitutesList');
+            const sub = document.createElement('div');
+            sub.className = 'substitute-player';
+            sub.innerHTML = `
+                <div class="player-jersey">S</div>
+                <input type="text" placeholder="Name" class="form-control">
+            `;
+            list.appendChild(sub);
+
+            // Add double-click event to the substitute player's circle div
+            const circleDiv = sub.querySelector('.player-jersey');
+            circleDiv.addEventListener('dblclick', () => {
+                console.log('Double-clicked substitute player');
+                selectedSubstitute = sub;
+                document.getElementById('substituteModal').style.display = 'flex';
+            });
+        }
+
+        function updateSubstitute() {
+            const substituteName = document.getElementById('substituteName').value;
+            const substituteImage = document.getElementById('substituteImage').files[0];
+
+            // Update the substitute player's name
+            if (substituteName) {
+                selectedSubstitute.querySelector('input').value = substituteName;
+            }
+
+            // Update the substitute player's image
+            if (substituteImage) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedSubstitute.querySelector('.player-jersey').style.backgroundImage = `url(${e.target.result})`;
+                    selectedSubstitute.querySelector('.player-jersey').style.backgroundSize = 'cover';
+                }
+                reader.readAsDataURL(substituteImage);
+            }
+
+            closeSubstituteModal();
+        }
+
+        function closeSubstituteModal() {
+            document.getElementById('substituteModal').style.display = 'none';
+        }
+
+
+        function takeScreenshot() {
+            console.log('Capturing screenshot of the pitch...');
+            const fieldContainer = document.querySelector('.field-container');
+
+            html2canvas(fieldContainer).then(canvas => {
+                console.log('Screenshot captured');
+                const screenshot = canvas.toDataURL('image/png');
+
+                const link = document.createElement('a');
+                link.href = screenshot;
+                link.download = 'pitch-screenshot.png';
+                link.click();
+                console.log('Screenshot downloaded');
+
+                // Show the ad modal after the screenshot is taken
+                showAdModal();
+            }).catch(error => {
+                console.error('Error capturing screenshot:', error);
+            });
+        }
+
+        function showAdModal() {
+            document.getElementById('adModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('adModal').style.display = 'none';
+        }
+
+
+
+
+        // Generate sample products with images
+        const products = [
+            {
+                name: 'Messi Jersey',
+                price: '₹289',
+                oldPrice: '₹399',
+                discount: '28%',
+                image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTVCw31cTEUantR7wqsJOmrLQMDgwoAUXkQdSQsCSJTnNce_LdrYkKam-tACCsWZQpB0whvJ_Crp3eztE-_jv8sa6r7xWwlRRYz1hxkTckTutpc4KF_eJ9mfG2PJWTWEHzJ_qAIH9k&usqp=CAc',
+                url: 'https://www.amazon.in/dp/example_affiliate_link'
+            },
+            {
+                name: 'Soccer Boots',
+                price: '₹769',
+                oldPrice: '₹999',
+                discount: '23%',
+                image: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQObkl8WEO9nmRsRi4hIVRNyPnUkx1l3tC4SudD0sE1TKSMYPXq83P_8jK84JFPkCDeORwrpXwfHgp_IJNmOEnHL1o1NWBzSiETTtdVR0cB5Edl20XAIBBL',
+                url: 'https://www.flipkart.com/example_affiliate_link'
+            },
+            // Add more products...
+        ];
+
+        // Map products to HTML with images
+        const productHTML = products.map(product => `
+    <div class="product-card">
+        <div class="offer-badge">${product.discount} OFF</div>
+        <img src="${product.image}" alt="${product.name}" class="product-image">
+        <h3>${product.name}</h3>
+        <p class="old-price">${product.oldPrice}</p>
+        <p class="new-price">${product.price}</p>
+        <button class="btn" onclick="redirectToAffiliate('${product.url}')">Buy Now</button>
+    </div>
+`).join('');
+
+        document.getElementById('productsTrack').innerHTML = productHTML + productHTML; // Duplicate for infinite scroll
+
+        // Redirect Function
+        function redirectToAffiliate(url) {
+            window.open(url, '_blank'); // Opens in new tab
+        }
+        // Control looping speed dynamically
+        let animationSpeed = 20; // Adjust this for speed control
+        document.querySelector('.products-track').style.animationDuration = `${animationSpeed}s`;
+        // Initialize
+        // Initialize both teams
+        generatePlayers();
+        generateOpponentPlayers();
+    </script>
 </body>
+
 </html>
